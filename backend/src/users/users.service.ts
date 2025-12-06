@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -79,5 +79,30 @@ export class UsersService {
         }
 
         return user;
+    }
+
+    async remove(id: string) {
+        const user = await this.prisma.user.findUnique({
+            where: { id },
+        });
+
+        if (!user) {
+            throw new NotFoundException(`User with ID ${id} not found`);
+        }
+
+        const activeLoans = await this.prisma.borrowedBook.count({
+            where: {
+                userId: id,
+                returnedAt: null,
+            },
+        });
+
+        if (activeLoans > 0) {
+            throw new BadRequestException('User has unreturned books. Return them before deleting the user.');
+        }
+
+        return this.prisma.user.delete({
+            where: { id },
+        });
     }
 }

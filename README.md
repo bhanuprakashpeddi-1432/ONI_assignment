@@ -48,6 +48,40 @@ This project was built to specifically address the requirements of the Full-Stac
 
 ---
 
+## 🖼️ Screenshots
+
+<div align="center">
+  <h3>Authentication & Security</h3>
+  <img src="images/LoginUI.png" alt="Login Page" width="700" />
+  <p><em>Secure Login & Registration with JWT Authentication</em></p>
+</div>
+
+<br />
+
+<div align="center">
+  <h3>Book & Author Management</h3>
+  <p>
+    <img src="images/BooksUI.png" alt="Books Management" width="45%" />
+    <img src="images/AuthorsUI.png" alt="Authors Management" width="45%" />
+  </p>
+  <p><em>Comprehensive CRUD operations for Books and Authors</em></p>
+</div>
+
+<br />
+
+<div align="center">
+  <h3>Admin Dashboard & Borrowing</h3>
+  <p>
+    <img src="images/AdminUI-user.png" alt="Admin User Management" width="45%" />
+    <img src="images/borrowedUI.png" alt="Borrowed Books" width="45%" />
+  </p>
+  <p><em>Role-Based User Management (Admin only) and Loan Tracking</em></p>
+</div>
+
+## 🏗️ Architecture & Deployment
+
+For detailed production deployment instructions, please see [**DEPLOYMENT.md**](./DEPLOYMENT.md).
+
 ## 🚀 Quick Start
 
 ### Option 1: Using Docker (Recommended)

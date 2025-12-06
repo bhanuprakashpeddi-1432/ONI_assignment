@@ -1,5 +1,5 @@
 import api from '../lib/axios';
-import { Author, Book, User, BorrowedBook } from '../types';
+import { Author, Book, User, BorrowedBook, RegisterData } from '../types';
 
 export const authorsApi = {
     getAll: () => api.get<Author[]>('/authors'),
@@ -21,7 +21,8 @@ export const booksApi = {
 export const usersApi = {
     getAll: () => api.get<User[]>('/users'),
     getOne: (id: string) => api.get<User>(`/users/${id}`),
-    create: (data: Partial<User> & { password: string }) => api.post<User>('/users', data),
+    create: (data: RegisterData) => api.post<User>('/users', data),
+    delete: (id: string) => api.delete(`/users/${id}`),
 };
 
 export const borrowedBooksApi = {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { authorsApi, booksApi, usersApi, borrowedBooksApi } from '../services/api';
-import { Author, Book, User, BorrowedBook } from '../types';
+import { Author, Book, User, BorrowedBook, RegisterData } from '../types';
 
 const Dashboard: React.FC = () => {
     const { user, logout } = useAuth();
@@ -23,6 +23,7 @@ const Dashboard: React.FC = () => {
     const [showBookModal, setShowBookModal] = useState(false);
     const [showAuthorModal, setShowAuthorModal] = useState(false);
     const [showBorrowModal, setShowBorrowModal] = useState(false);
+    const [showUserModal, setShowUserModal] = useState(false);
     const [selectedBook, setSelectedBook] = useState<Book | null>(null);
     const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
 
@@ -30,6 +31,7 @@ const Dashboard: React.FC = () => {
     const [bookForm, setBookForm] = useState({ title: '', isbn: '', authorId: '', publishedDate: '' });
     const [authorForm, setAuthorForm] = useState({ name: '', bio: '', birthDate: '' });
     const [borrowForm, setBorrowForm] = useState({ bookId: '', userId: '', dueDate: '' });
+    const [userForm, setUserForm] = useState<RegisterData>({ name: '', email: '', password: '', role: 'USER' });
 
     useEffect(() => {
         loadData();
@@ -157,6 +159,28 @@ const Dashboard: React.FC = () => {
             loadData();
         } catch (error: any) {
             alert(error.response?.data?.message || 'Error returning book');
+        }
+    };
+
+    const handleCreateUser = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            await usersApi.create(userForm);
+            setShowUserModal(false);
+            setUserForm({ name: '', email: '', password: '', role: 'USER' });
+            loadData();
+        } catch (error: any) {
+            alert(error.response?.data?.message || 'Error creating user');
+        }
+    };
+
+    const handleDeleteUser = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
+        try {
+            await usersApi.delete(id);
+            loadData();
+        } catch (error: any) {
+            alert(error.response?.data?.message || 'Error deleting user');
         }
     };
 
@@ -339,7 +363,14 @@ const Dashboard: React.FC = () => {
                 {/* Users Tab */}
                 {activeTab === 'users' && (
                     <div>
-                        <h3 style={{ marginBottom: '1.5rem' }}>Users</h3>
+                        <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between' }}>
+                            <h3>Users</h3>
+                            {user?.role === 'ADMIN' && (
+                                <button onClick={() => { setUserForm({ name: '', email: '', password: '', role: 'USER' }); setShowUserModal(true); }} className="btn btn-primary">
+                                    + Add User
+                                </button>
+                            )}
+                        </div>
                         {loading ? (
                             <div className="loading"><div className="spinner"></div></div>
                         ) : (
@@ -351,6 +382,7 @@ const Dashboard: React.FC = () => {
                                             <th>Email</th>
                                             <th>Role</th>
                                             <th>Joined</th>
+                                            {user?.role === 'ADMIN' && <th>Actions</th>}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -360,6 +392,17 @@ const Dashboard: React.FC = () => {
                                                 <td className="text-muted">{u.email}</td>
                                                 <td><span className={`badge ${u.role === 'ADMIN' ? 'badge-warning' : 'badge-info'}`}>{u.role}</span></td>
                                                 <td className="text-sm">{new Date(u.createdAt).toLocaleDateString()}</td>
+                                                {user?.role === 'ADMIN' && (
+                                                    <td>
+                                                        <button
+                                                            onClick={() => handleDeleteUser(u.id)}
+                                                            className="btn btn-danger btn-sm"
+                                                            disabled={u.id === user.id} // Prevent self-delete
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </td>
+                                                )}
                                             </tr>
                                         ))}
                                     </tbody>
@@ -533,6 +576,68 @@ const Dashboard: React.FC = () => {
                 </div>
             )}
 
+            {/* User Modal */}
+            {showUserModal && (
+                <div className="modal-overlay" onClick={() => setShowUserModal(false)}>
+                    <div className="modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3 className="modal-title">Add User</h3>
+                            <button className="modal-close" onClick={() => setShowUserModal(false)}>×</button>
+                        </div>
+                        <form onSubmit={handleCreateUser}>
+                            <div className="modal-body">
+                                <div className="form-group">
+                                    <label className="form-label">Name</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={userForm.name}
+                                        onChange={(e) => setUserForm({ ...userForm, name: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Email</label>
+                                    <input
+                                        type="email"
+                                        className="form-control"
+                                        value={userForm.email}
+                                        onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Password</label>
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        value={userForm.password}
+                                        onChange={(e) => setUserForm({ ...userForm, password: e.target.value })}
+                                        required
+                                        minLength={6}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Role</label>
+                                    <select
+                                        className="form-control"
+                                        value={userForm.role}
+                                        onChange={(e) => setUserForm({ ...userForm, role: e.target.value as 'USER' | 'ADMIN' })}
+                                    >
+                                        <option value="USER">User</option>
+                                        <option value="ADMIN">Admin</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" onClick={() => setShowUserModal(false)} className="btn btn-secondary">Cancel</button>
+                                <button type="submit" className="btn btn-primary">Create User</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
             {/* Borrow Modal */}
             {showBorrowModal && (
                 <div className="modal-overlay" onClick={() => setShowBorrowModal(false)}>
@@ -594,3 +699,4 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
+

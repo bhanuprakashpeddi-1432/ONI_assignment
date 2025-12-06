@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const { login } = useAuth();
+    const { register } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -16,10 +17,10 @@ const Login: React.FC = () => {
         setIsLoading(true);
 
         try {
-            await login({ email, password });
+            await register({ name, email, password });
             navigate('/');
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Invalid credentials');
+            setError(err.response?.data?.message || 'Registration failed');
         } finally {
             setIsLoading(false);
         }
@@ -30,7 +31,7 @@ const Login: React.FC = () => {
             <div className="card" style={{ maxWidth: '400px', width: '100%' }}>
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                     <h1 style={{ marginBottom: '0.5rem' }}>📚 Library System</h1>
-                    <p className="text-muted">Sign in to your account</p>
+                    <p className="text-muted">Create a new account</p>
                 </div>
 
                 {error && (
@@ -41,11 +42,23 @@ const Login: React.FC = () => {
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
+                        <label className="form-label">Name</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="John Doe"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
                         <label className="form-label">Email</label>
                         <input
                             type="email"
                             className="form-control"
-                            placeholder="admin@library.com"
+                            placeholder="john@example.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -61,24 +74,19 @@ const Login: React.FC = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
+                            minLength={6}
                         />
                     </div>
 
                     <button type="submit" className="btn btn-primary w-full" disabled={isLoading}>
-                        {isLoading ? 'Signing in...' : 'Sign In'}
+                        {isLoading ? 'Creating Account...' : 'Sign Up'}
                     </button>
                 </form>
 
-                <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'var(--gray-50)', borderRadius: 'var(--radius)', fontSize: '0.875rem' }}>
-                    <p style={{ fontWeight: '500', marginBottom: '0.5rem' }}>Demo Credentials:</p>
-                    <p className="text-muted" style={{ marginBottom: '0.25rem' }}>Admin: admin@library.com / admin123</p>
-                    <p className="text-muted">User: john@example.com / user123</p>
-                </div>
-
                 <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem' }}>
-                    Don't have an account?{' '}
-                    <Link to="/register" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 500 }}>
-                        Sign Up
+                    Already have an account?{' '}
+                    <Link to="/login" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 500 }}>
+                        Sign In
                     </Link>
                 </p>
             </div>
@@ -86,4 +94,4 @@ const Login: React.FC = () => {
     );
 };
 
-export default Login;
+export default Register;
