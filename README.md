@@ -1,186 +1,275 @@
-# 📚 Library Management System
+# Library Management System 📚
 
-A full-stack library management system built with **NestJS**, **PostgreSQL** (via Prisma), and **React** (TypeScript). This project was built to fulfill the "Full-Stack Intern Assignment".
+A complete full-stack library management application with Docker deployment, built using modern technologies and best practices.
 
----
-## 📋 Assignment Compliance Matrix
+## 🚀 Features
 
-This project was built to specifically address the requirements of the Full-Stack Intern Assignment. Below is a detailed mapping of requirements to the implementation.
-
-| Category | Requirement | Status | Implementation Details |
-|----------|-------------|:------:|------------------------|
-| **Objective** | Build a full-stack library system (NestJS API + React Client) | ✅ | **Backend**: NestJS, **Frontend**: React (Vite+TS), **DB**: Postgres. |
-| **Books CRUD** | Create, Read, Update, Delete, List with filters | ✅ | Implemented in \`BooksModule\`. Filters: Search, Author, Availability. Logic prevents deleting borrowed books. |
-| **Authors CRUD** | Create, Read, Update, Delete, List | ✅ | Implemented in \`AuthorsModule\`. Deleting an author cascades to their books. |
-| **Users CRUD** | Create, List | ✅ | Implemented in \`UsersModule\`. Users have roles (USER/ADMIN). |
-| **Borrowing** | Borrow, Return, List borrowed books | ✅ | Implemented in \`BorrowedBooksModule\`. Tracks due dates and borrow status. |
-| **Auth** | Simple JWT authentication | ✅ | Implemented in \`AuthModule\` using \`@nestjs/jwt\` and \`passport\`. Protected routes require a valid Bearer token. |
-| **Tech Stack** | NestJS, Prisma + Postgres, React (TS) | ✅ | **Backend**: NestJS v10, Prisma v5. **Frontend**: React v18, TypeScript v5. |
-| **Containerization** | Dockerfile, docker-compose | ✅ | \`docker-compose.yml\` orchestrates Backend, Frontend, and Postgres containers. |
-| **Config** | Use .env with .env.example | ✅ | \`.env.example\` provided for both backend and frontend. |
-| **Frontend** | Persist JWT, Manage Entities, Borrow/Return | ✅ | React Context API handles Auth state. UI supports all required operations. |
-| **Bonus** | Dockerized dev environment | ✅ | Fully supported via \`docker-compose up\`. |
-| **Bonus** | Advanced filtering | ✅ | Backend supports filtering by Author, Availability, and Text Search. |
-| **Bonus** | Clean pixel-perfect UI | ✅ | Modern, responsive UI with gradients, shadows, and smooth transitions. |
-| **Bonus** | Proper state management | ✅ | React Context API used for global Authentication state. |
-
----
+- **Authentication & Authorization**: JWT-based authentication with role-based access control (Admin/User)
+- **Book Management**: Complete CRUD operations for books with author relationships
+- **Author Management**: Manage author information and their books
+- **Book Borrowing System**: Track borrowed books with due dates and return status
+- **Responsive UI**: Modern React interface with intuitive design
+- **Dockerized Deployment**: Production-ready Docker setup with multi-stage builds
 
 ## 🛠️ Tech Stack
 
 ### Backend
-- **Framework**: [NestJS](https://nestjs.com/) (Node.js)
-- **Database**: PostgreSQL 16
-- **ORM**: [Prisma](https://www.prisma.io/)
-- **Authentication**: JWT (JSON Web Tokens) + Bcrypt
-- **Validation**: `class-validator` & `class-transformer`
+- **NestJS**: Progressive Node.js framework for building efficient server-side applications
+- **Prisma 7**: Next-generation ORM with type-safe database access
+- **PostgreSQL 16**: Robust relational database
+- **JWT**: Secure authentication mechanism
+- **bcrypt**: Password hashing
 
 ### Frontend
-- **Library**: [React 18](https://react.dev/)
-- **Language**: TypeScript
-- **Build Tool**: Vite
-- **HTTP Client**: Axios
-- **Routing**: React Router DOM
+- **React 18**: Modern UI library with hooks
+- **TypeScript**: Type-safe JavaScript
+- **Vite**: Fast build tool and dev server
+- **Axios**: Promise-based HTTP client
+- **React Router**: Client-side routing
+- **Nginx**: Production web server and reverse proxy
 
 ### DevOps
-- **Docker**: Containerization for all services
-- **Docker Compose**: Orchestration for local development
+- **Docker**: Containerization platform
+- **Docker Compose**: Multi-container orchestration
+- **Multi-stage builds**: Optimized production images
 
----
+## 📦 Getting Started with Docker (Recommended)
 
-## 🖼️ Screenshots
+### Prerequisites
+- Docker Desktop (Windows/Mac) or Docker Engine (Linux)
+- Docker Compose v2.x or higher
 
-<div align="center">
-  <h3>Authentication & Security</h3>
-  <img src="images/LoginUI.png" alt="Login Page" width="700" />
-  <p><em>Secure Login & Registration with JWT Authentication</em></p>
-</div>
+### Quick Start
 
-<br />
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd Omini
+   ```
 
-<div align="center">
-  <h3>Book & Author Management</h3>
-  <p>
-    <img src="images/BooksUI.png" alt="Books Management" width="45%" />
-    <img src="images/AuthorsUI.png" alt="Authors Management" width="45%" />
-  </p>
-  <p><em>Comprehensive CRUD operations for Books and Authors</em></p>
-</div>
+2. **Start all services**
+   ```bash
+   docker-compose up -d --build
+   ```
 
-<br />
+3. **Access the application**
+   - Frontend: http://localhost:8080
+   - Backend API: http://localhost:3000/api
+   - Database: localhost:5433
 
-<div align="center">
-  <h3>Admin Dashboard & Borrowing</h3>
-  <p>
-    <img src="images/AdminUI-user.png" alt="Admin User Management" width="45%" />
-    <img src="images/borrowedUI.png" alt="Borrowed Books" width="45%" />
-  </p>
-  <p><em>Role-Based User Management (Admin only) and Loan Tracking</em></p>
-</div>
+### Test Credentials
 
-## 🏗️ Architecture & Deployment
+**Admin Account:**
+- Email: `admin@library.com`
+- Password: `admin123`
 
-For detailed production deployment instructions, please see [**DEPLOYMENT.md**](./DEPLOYMENT.md).
+**User Accounts:**
+- Email: `john@example.com` | Password: `user123`
+- Email: `jane@example.com` | Password: `user123`
 
-## 🚀 Quick Start
+### Docker Commands
 
-### Option 1: Using Docker (Recommended)
-
-The easiest way to run the application is using Docker Compose. This ensures all dependencies (Database, Backend, Frontend) are set up correctly.
-
-1.  **Clone the repository**
-    ```bash
-    git clone <repository-url>
-    cd library-management-system
-    ```
-
-2.  **Start the application**
-    ```bash
-    docker-compose up -d --build
-    ```
-    *This command builds the images and starts the containers.*
-
-3.  **Access the App**
-    - **Frontend**: [http://localhost:5173](http://localhost:5173)
-    - **Backend API**: [http://localhost:3000](http://localhost:3000)
-    - **Database**: `localhost:5432`
-
-### Option 2: Manual Setup
-
-If you prefer to run services individually:
-
-#### 1. Backend Setup
 ```bash
-cd backend
-npm install
+# Start all services
+docker-compose up -d
 
-# Setup Env
-cp .env.example .env
-# Update .env with your local Postgres credentials if needed
+# Build and start with fresh images
+docker-compose up -d --build
 
-# Run Migrations & Seed
-npm run prisma:migrate
-npm run prisma:seed
+# Stop all services
+docker-compose down
 
-# Start Server
-npm run start:dev
+# View logs
+docker-compose logs -f
+
+# View logs for specific service
+docker-compose logs -f backend
+docker-compose logs -f frontend
+
+# Check service status
+docker-compose ps
+
+# Restart a service
+docker-compose restart backend
 ```
 
-#### 2. Frontend Setup
-```bash
-cd frontend
-npm install
-
-# Setup Env
-cp .env.example .env
-
-# Start Server
-npm run dev
-```
-
----
-
-## 🧪 Testing & Authentication
-
-### Default Seeded Users
-The application comes with pre-seeded data for testing:
-
-| Role | Email | Password |
-|------|-------|----------|
-| **Admin** | `admin@library.com` | `admin123` |
-| **User** | `john@example.com` | `user123` |
-
-### Getting a Token (curl)
-To get a token manually:
-```bash
-curl -X POST http://localhost:3000/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email": "admin@library.com", "password": "admin123"}'
-```
-
----
-
-## 📝 Design Decisions & Assumptions
-
--   **UUIDs**: Used for all primary keys to ensure scalability and avoid enumeration attacks.
--   **Soft Deletes**: Borrowed books are "returned" by setting a `returnedAt` timestamp rather than deleting the record, preserving history.
--   **Cascade**: Deleting an Author deletes their Books. Deleting a Book is BLOCKED if it is currently borrowed.
--   **State Management**: React Context was chosen over Redux for simplicity, as the global state requirement (Auth) is minimal.
-
-## 📂 Project Structure
+## 🏗️ Architecture
 
 ```
-├── backend/            # NestJS API
+┌─────────────────────────────────────────────────────┐
+│                   User Browser                       │
+└────────────────────┬────────────────────────────────┘
+                     │ HTTP :8080
+                     ▼
+┌─────────────────────────────────────────────────────┐
+│            Frontend Container (Nginx)                │
+│  - Serves React SPA                                  │
+│  - Proxies /api requests to backend                  │
+└────────────────────┬────────────────────────────────┘
+                     │ Docker Network
+                     ▼
+┌─────────────────────────────────────────────────────┐
+│            Backend Container (NestJS)                │
+│  - REST API :3000                                    │
+│  - JWT Authentication                                │
+│  - Business Logic                                    │
+└────────────────────┬────────────────────────────────┘
+                     │ Docker Network
+                     ▼
+┌─────────────────────────────────────────────────────┐
+│         Database Container (PostgreSQL)              │
+│  - PostgreSQL 16                                     │
+│  - Persistent Volume                                 │
+│  - Port :5433                                        │
+└─────────────────────────────────────────────────────┘
+```
+
+## 📁 Project Structure
+
+```
+.
+├── backend/                 # NestJS backend application
 │   ├── src/
-│   │   ├── auth/       # Authentication Module
-│   │   ├── books/      # Books CRUD
-│   │   ├── authors/    # Authors CRUD
-│   │   └── ...
-│   └── prisma/         # Schema & Seed
-├── frontend/           # React App
+│   │   ├── auth/           # Authentication module
+│   │   ├── users/          # User management
+│   │   ├── books/          # Book management
+│   │   ├── authors/        # Author management
+│   │   ├── borrowed-books/ # Borrowing system
+│   │   └── prisma/         # Prisma service
+│   ├── prisma/
+│   │   ├── schema.prisma   # Database schema
+│   │   ├── seed.ts         # Database seeding
+│   │   └── migrations/     # Migration files
+│   ├── Dockerfile          # Multi-stage backend build
+│   └── package.json
+│
+├── frontend/               # React frontend application
 │   ├── src/
-│   │   ├── components/ # Reusable UI Components
-│   │   ├── pages/      # Page Views
-│   │   └── context/    # Auth Context
-└── docker-compose.yml  # Container Orchestration
+│   │   ├── pages/         # Page components
+│   │   ├── components/    # Reusable components
+│   │   ├── context/       # React context (Auth)
+│   │   ├── services/      # API services
+│   │   └── lib/           # Utilities (axios)
+│   ├── nginx.conf         # Nginx configuration
+│   ├── Dockerfile         # Multi-stage frontend build
+│   └── package.json
+│
+└── docker-compose.yml     # Service orchestration
 ```
+
+## 🔧 Configuration
+
+### Environment Variables
+
+The application uses environment variables for configuration. In Docker, these are set in `docker-compose.yml`:
+
+**Backend:**
+- `DATABASE_URL`: PostgreSQL connection string
+- `JWT_SECRET`: Secret key for JWT token generation
+
+**Database:**
+- `POSTGRES_USER`: Database username
+- `POSTGRES_PASSWORD`: Database password
+- `POSTGRES_DB`: Database name
+
+## 🗄️ Database Schema
+
+### Tables
+- **User**: User accounts with roles (ADMIN/USER)
+- **Author**: Book authors
+- **Book**: Book catalog with availability status
+- **BorrowedBook**: Borrowing records with due dates
+
+### Relationships
+- User → BorrowedBook (one-to-many)
+- Book → BorrowedBook (one-to-many)
+- Author → Book (one-to-many)
+
+## 🔒 Security Features
+
+- Password hashing with bcrypt
+- JWT token-based authentication
+- Role-based access control (RBAC)
+- Protected API routes with guards
+- CORS enabled for frontend communication
+- Nginx reverse proxy for additional security
+
+## 🚢 Production Deployment
+
+The Docker setup is production-ready with:
+
+- **Multi-stage builds**: Minimized image sizes
+- **Non-root users**: Enhanced security
+- **Health checks**: Automatic service monitoring
+- **Persistent volumes**: Data persistence across restarts
+- **Optimized caching**: Faster builds with layer caching
+- **Nginx optimization**: Gzip compression, caching headers
+
+## 📊 API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - Login and get JWT token
+
+### Books
+- `GET /api/books` - Get all books
+- `GET /api/books/:id` - Get book by ID
+- `POST /api/books` - Create book (Admin only)
+- `PATCH /api/books/:id` - Update book (Admin only)
+- `DELETE /api/books/:id` - Delete book (Admin only)
+
+### Authors
+- `GET /api/authors` - Get all authors
+- `GET /api/authors/:id` - Get author by ID
+- `POST /api/authors` - Create author (Admin only)
+- `PATCH /api/authors/:id` - Update author (Admin only)
+- `DELETE /api/authors/:id` - Delete author (Admin only)
+
+### Borrowed Books
+- `GET /api/borrowed-books` - Get all borrowed books
+- `POST /api/borrowed-books` - Borrow a book
+- `PATCH /api/borrowed-books/:id` - Return a book
+
+## 🧪 Testing
+
+The application includes test data with:
+- 3 users (1 admin, 2 regular users)
+- 3 authors
+- 7 books across different genres
+
+## 📝 Development Notes
+
+### Prisma 7 Changes
+This project uses Prisma 7, which has breaking changes:
+- Database URL moved from `schema.prisma` to `prisma.config.ts`
+- `url` field removed from datasource block in schema
+
+### Docker Optimizations
+- npm install used instead of npm ci (package-lock excluded)
+- Separate build and production stages
+- Minimal Alpine-based images
+- Build-time Prisma generation with dummy DATABASE_URL
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## 📄 License
+
+MIT License - feel free to use this project for learning or commercial purposes.
+
+## 👨‍💻 Support
+
+For issues or questions:
+1. Check existing documentation
+2. Review Docker logs: `docker-compose logs`
+3. Verify all containers are running: `docker-compose ps`
+4. Open an issue on GitHub
+
+---
+
+**Built with ❤️ using NestJS, React, and Docker**
