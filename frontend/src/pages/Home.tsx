@@ -142,11 +142,11 @@ const Home: React.FC = () => {
                         subtitle="In collection"
                     />
                     <StatCard
-                        title="Active Borrows"
+                        title="Active Loans"
                         value={stats?.summary.activeBorrows || 0}
                         icon="🔄"
                         color="#06b6d4"
-                        subtitle="Not yet returned"
+                        subtitle="Borrow records active"
                     />
                     <StatCard
                         title="Overdue"

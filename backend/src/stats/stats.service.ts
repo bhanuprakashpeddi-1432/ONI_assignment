@@ -83,17 +83,18 @@ export class StatsService {
       }),
     ]);
 
-    // Calculate borrowed books count
+    // Calculate borrowed books count (books marked as unavailable)
+    // This represents books currently checked out based on the 'available' flag
     const borrowedBooks = totalBooks - availableBooks;
 
     return {
       summary: {
         totalBooks,
         availableBooks,
-        borrowedBooks,
+        borrowedBooks, // Books currently marked as unavailable/checked out
         totalAuthors,
         totalUsers,
-        activeBorrows,
+        activeBorrows, // Active borrow records (not yet returned)
         overdueCount: overdueBorrows.length,
       },
       recentActivity: recentBorrows,
