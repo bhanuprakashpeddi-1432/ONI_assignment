@@ -43,11 +43,25 @@ interface DashboardStats {
     }>;
 }
 
+const StatCard = ({ title, value, icon, color, subtitle }: { title: string; value: number; icon: string; color: string; subtitle?: string }) => (
+    <div className="stat-card" style={{ borderTop: `4px solid ${color}` }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div>
+                <p className="stat-title">{title}</p>
+                <h2 className="stat-value" style={{ color }}>{value}</h2>
+                {subtitle && <p className="stat-subtitle">{subtitle}</p>}
+            </div>
+            <div className="stat-icon" style={{ background: color }}>{icon}</div>
+        </div>
+    </div>
+);
+
 const Home: React.FC = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const [stats, setStats] = useState<DashboardStats | null>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         loadStats();
@@ -58,27 +72,16 @@ const Home: React.FC = () => {
 
     const loadStats = async () => {
         try {
+            setError(null);
             const res = await statsApi.getDashboard();
             setStats(res.data);
         } catch (error) {
             console.error('Error loading stats:', error);
+            setError('Failed to load dashboard statistics. Please try again.');
         } finally {
             setLoading(false);
         }
     };
-
-    const StatCard = ({ title, value, icon, color, subtitle }: { title: string; value: number; icon: string; color: string; subtitle?: string }) => (
-        <div className="stat-card" style={{ borderTop: `4px solid ${color}` }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div>
-                    <p className="stat-title">{title}</p>
-                    <h2 className="stat-value" style={{ color }}>{value}</h2>
-                    {subtitle && <p className="stat-subtitle">{subtitle}</p>}
-                </div>
-                <div className="stat-icon" style={{ background: color }}>{icon}</div>
-            </div>
-        </div>
-    );
 
     if (loading) {
         return (
@@ -111,6 +114,41 @@ const Home: React.FC = () => {
             </header>
 
             <div className="container" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
+                {/* Error Message */}
+                {error && (
+                    <div style={{
+                        background: 'rgba(239, 68, 68, 0.1)',
+                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                        borderRadius: '0.75rem',
+                        padding: '1rem',
+                        marginBottom: '1.5rem',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem'
+                    }}>
+                        <span style={{ fontSize: '1.25rem' }}>⚠️</span>
+                        <div>
+                            <p style={{ margin: 0, fontWeight: '600' }}>{error}</p>
+                            <button 
+                                onClick={loadStats} 
+                                style={{
+                                    marginTop: '0.5rem',
+                                    padding: '0.25rem 0.75rem',
+                                    background: 'rgba(255, 255, 255, 0.2)',
+                                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                                    borderRadius: '0.375rem',
+                                    color: 'white',
+                                    cursor: 'pointer',
+                                    fontSize: '0.875rem'
+                                }}
+                            >
+                                Retry
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 {/* Stats Grid */}
                 <div className="stats-grid">
                     <StatCard
