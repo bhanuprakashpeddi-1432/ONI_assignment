@@ -224,8 +224,8 @@ const Home: React.FC = () => {
                     <div className="activity-card">
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
                             <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: '600' }}>⚠️ Overdue Books</h3>
-                            <span className={`badge ${stats?.overdueBooks.length ? 'badge-danger' : 'badge-success'}`}>
-                                {stats?.overdueBooks.length || 0}
+                            <span className={`badge ${(stats?.overdueBooks.length ?? 0) > 0 ? 'badge-danger' : 'badge-success'}`}>
+                                {stats?.overdueBooks.length ?? 0}
                             </span>
                         </div>
                         <div className="activity-list">
