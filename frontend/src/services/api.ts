@@ -32,3 +32,7 @@ export const borrowedBooksApi = {
         api.post<BorrowedBook>('/borrowed-books', data),
     return: (id: string) => api.patch<BorrowedBook>(`/borrowed-books/${id}/return`),
 };
+
+export const statsApi = {
+    getDashboard: () => api.get('/stats/dashboard'),
+};

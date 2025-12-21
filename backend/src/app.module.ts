@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { AuthorsModule } from './authors/authors.module';
 import { BooksModule } from './books/books.module';
 import { BorrowedBooksModule } from './borrowed-books/borrowed-books.module';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { BorrowedBooksModule } from './borrowed-books/borrowed-books.module';
     AuthorsModule,
     BooksModule,
     BorrowedBooksModule,
+    StatsModule,
   ],
   controllers: [AppController],
   providers: [
